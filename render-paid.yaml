@@ -4,25 +4,24 @@ services:
     env: node
     buildCommand: cd backend && npm install
     startCommand: cd backend && npm start
-    plan: free
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 10000
+    disk:
+      name: pdf-storage
+      mountPath: /opt/render/project/src/backend/pdf_output
+      sizeGB: 5
 
   - type: web
     name: waqf-scraper-frontend
     env: static
     buildCommand: npm install && npm run build
     staticPublishPath: ./build
-    plan: free
     envVars:
       - key: REACT_APP_API_URL
-        fromService:
-          type: web
-          name: waqf-scraper-backend
-          envVarKey: RENDER_EXTERNAL_URL
+        value: https://waqf-scraper-backend.onrender.com
     routes:
       - type: rewrite
         source: /*
